@@ -17,5 +17,12 @@ Next Steps:
 - Add loading symbol while waiting for response.
 - Create slideshow interactivity.
 - Module 2 and 3.
+- Add account handling + database
 
 Front end was developed by OpenAI's ChatGPT.
+
+Current Stack:
+Backend:	Python, Flask
+AI integration:	Gemini API
+Frontend: HTML, CSS, JavaScript
+Environment configuration	python-dotenv
