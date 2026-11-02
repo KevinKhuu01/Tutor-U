@@ -1,0 +1,467 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta
+      name="description"
+      content="TeacherBot is your calm space to learn, ask questions, and practice at your own pace."
+    >
+    <meta name="theme-color" content="#f7f5ef">
+
+    <title>TeacherBot · Your study space</title>
+
+    <link rel="stylesheet" href="styles.css">
+    <script src="app.js" defer></script>
+  </head>
+
+  <body>
+    <!-- Reusable SVG icons, referenced with <use href="#icon-id"> -->
+    <svg
+      class="icon-defs"
+      xmlns="http://www.w3.org/2000/svg"
+      aria-hidden="true"
+    >
+      <defs>
+        <symbol id="book" viewBox="0 0 24 24">
+          <path d="M12 6c-3-2-6-2-9-1v14c3-1 6-1 9 1 3-2 6-2 9-1V5c-3-1-6-1-9 1Z"/>
+          <path d="M12 6v14"/>
+        </symbol>
+
+        <symbol id="spark" viewBox="0 0 24 24">
+          <path d="m12 3 2.5 6.5L21 12l-6.5 2.5L12 21l-2.5-6.5L3 12l6.5-2.5L12 3Z"/>
+        </symbol>
+
+        <symbol id="grid" viewBox="0 0 24 24">
+          <rect x="3" y="3" width="7" height="7" rx="2"/>
+          <rect x="14" y="3" width="7" height="7" rx="2"/>
+          <rect x="3" y="14" width="7" height="7" rx="2"/>
+          <rect x="14" y="14" width="7" height="7" rx="2"/>
+        </symbol>
+
+        <symbol id="chart" viewBox="0 0 24 24">
+          <path d="M4 4v16h17M9 15v-4m5 4V7m5 8V3"/>
+        </symbol>
+
+        <symbol id="plus" viewBox="0 0 24 24">
+          <path d="M12 5v14M5 12h14"/>
+        </symbol>
+
+        <symbol id="arrow" viewBox="0 0 24 24">
+          <path d="M5 12h14m-6-6 6 6-6 6"/>
+        </symbol>
+
+        <symbol id="leaf" viewBox="0 0 24 24">
+          <path d="M20 4C8 1 2 7 6 15s16 2 14-11ZM5 21 16 9"/>
+        </symbol>
+
+        <symbol id="file" viewBox="0 0 24 24">
+          <path d="M14 3H5v18h14V8l-5-5Zm0 0v5h5M8 12h8m-8 4h6"/>
+        </symbol>
+
+        <symbol id="check" viewBox="0 0 24 24">
+          <path d="m5 12 4 4L19 6"/>
+        </symbol>
+      </defs>
+    </svg>
+
+    <div class="app-shell">
+      <!-- Sidebar: branding, navigation, and saved lessons -->
+      <aside class="sidebar">
+        <a class="brand" href="./" aria-label="TeacherBot home">
+          <span class="brand-mark">
+            <svg><use href="#book"/></svg>
+          </span>Teacher<span>Bot</span><span class="brand-dot">.</span>
+        </a>
+
+        <button class="new-lesson" data-action="new">
+          <svg><use href="#plus"/></svg>
+          New lesson
+        </button>
+
+        <span class="eyebrow nav-caption">YOUR WORKSPACE</span>
+
+        <nav class="primary-nav" aria-label="Workspace">
+          <button class="nav-item active" data-view="study">
+            <svg><use href="#book"/></svg>
+            Study room
+            <span class="nav-dot"></span>
+          </button>
+
+          <button class="nav-item" data-view="materials">
+            <svg><use href="#grid"/></svg>
+            My materials
+            <span id="material-count" class="small-count">1</span>
+          </button>
+
+          <button class="nav-item" data-action="progress">
+            <svg><use href="#chart"/></svg>
+            My progress
+          </button>
+        </nav>
+
+        <div class="sidebar-label">
+          <span class="eyebrow">YOUR LESSONS</span>
+          <span id="lesson-count">01</span>
+        </div>
+
+        <!-- Populated by app.js -->
+        <div id="lesson-list" class="lesson-list"></div>
+
+        <div class="sidebar-bottom">
+          <div class="gentle-note">
+            <svg><use href="#leaf"/></svg>
+            <strong>Small steps. Real progress.</strong>
+            <p>You don’t have to learn it all today. Just start with one idea.</p>
+          </div>
+
+          <div class="profile">
+            <span class="avatar">Y</span>
+            <div>
+              <strong>Your learning space</strong>
+              <span>Made for your pace</span>
+            </div>
+            <span class="profile-sun">☀</span>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Main workspace -->
+      <div class="main-shell">
+        <header class="topbar">
+          <div>
+            <span class="breadcrumb">Your workspace</span>
+            <span class="slash">/</span>
+            <strong id="page-name">Study room</strong>
+          </div>
+
+          <span class="demo-badge">
+            <span></span>
+            Frontend demo
+          </span>
+        </header>
+
+        <main>
+          <!-- Welcome heading and decorative artwork -->
+          <section class="welcome">
+            <div>
+              <span class="eyebrow">A LITTLE CURIOSITY GOES A LONG WAY</span>
+              <h1>Let’s make it <em>click.</em></h1>
+              <p>A space to ask questions, untangle ideas, and learn at your pace.</p>
+            </div>
+
+            <div class="welcome-art" aria-hidden="true">
+              <div class="orbit"></div>
+              <svg class="art-book"><use href="#book"/></svg>
+              <span class="art-star">✦</span>
+              <span class="art-small">✧</span>
+            </div>
+          </section>
+
+          <!-- Materials view: shown when "My materials" is selected -->
+          <section id="materials-view" hidden>
+            <div class="section-heading">
+              <div>
+                <span class="eyebrow">YOUR COLLECTION</span>
+                <h2>Good learning starts here.</h2>
+              </div>
+
+              <button class="button primary" data-action="new">
+                Add material <span>+</span>
+              </button>
+            </div>
+
+            <div id="materials-grid" class="materials-grid"></div>
+          </section>
+
+          <!-- Study view: lesson on the left, tutor chat on the right -->
+          <section id="study-view">
+            <div class="workspace-grid">
+              <!-- Lesson panel -->
+              <section class="lesson-panel" aria-label="Lesson">
+                <div class="lesson-heading">
+                  <div>
+                    <span class="subject-chip" id="subject">
+                      COMPUTER SCIENCE
+                    </span>
+                    <h2 id="lesson-title">Understanding merge sort</h2>
+                    <p id="lesson-meta">
+                      Algorithms <span>·</span> A guided introduction
+                    </p>
+                  </div>
+
+                  <span class="lesson-book">
+                    <svg><use href="#book"/></svg>
+                  </span>
+                </div>
+
+                <!-- Lesson navigation tabs -->
+                <div class="tabs" role="tablist" aria-label="Lesson sections">
+                  <button
+                    class="tab active"
+                    role="tab"
+                    id="tab-learn"
+                    aria-controls="learn-panel"
+                    aria-selected="true"
+                    data-tab="learn"
+                  >
+                    Learn
+                  </button>
+
+                  <button
+                    class="tab"
+                    role="tab"
+                    id="tab-practice"
+                    aria-controls="practice-panel"
+                    aria-selected="false"
+                    data-tab="practice"
+                  >
+                    Practice
+                    <span class="tab-count">3</span>
+                  </button>
+
+                  <button
+                    class="tab"
+                    role="tab"
+                    id="tab-notes"
+                    aria-controls="notes-panel"
+                    aria-selected="false"
+                    data-tab="notes"
+                  >
+                    My notes
+                  </button>
+                </div>
+
+                <!-- Lesson and practice content are populated by app.js -->
+                <div
+                  id="learn-panel"
+                  role="tabpanel"
+                  aria-labelledby="tab-learn"
+                  class="tab-panel"
+                ></div>
+
+                <div
+                  id="practice-panel"
+                  role="tabpanel"
+                  aria-labelledby="tab-practice"
+                  class="tab-panel"
+                  hidden
+                ></div>
+
+                <!-- Personal notes -->
+                <div
+                  id="notes-panel"
+                  role="tabpanel"
+                  aria-labelledby="tab-notes"
+                  class="tab-panel"
+                  hidden
+                >
+                  <div class="section-heading">
+                    <h3>Your lightbulb moments</h3>
+                    <span id="save-status" class="muted">
+                      Saved on this device
+                    </span>
+                  </div>
+
+                  <p class="body-copy">
+                    Put it in your own words. That’s where understanding starts.
+                  </p>
+
+                  <label class="sr-only" for="notes">Lesson notes</label>
+                  <textarea
+                    id="notes"
+                    placeholder="An idea that clicked, a question to come back to…"
+                  ></textarea>
+                </div>
+
+                <!-- Lesson progress and practice shortcut -->
+                <footer class="lesson-footer">
+                  <div>
+                    <span id="lesson-progress-label">
+                      Your first step starts here
+                    </span>
+                    <div class="progress-track">
+                      <div id="lesson-progress"></div>
+                    </div>
+                  </div>
+
+                  <button class="text-button" id="practice-shortcut">
+                    Try a question
+                    <svg><use href="#arrow"/></svg>
+                  </button>
+                </footer>
+              </section>
+
+              <!-- Tutor chat panel -->
+              <aside class="tutor-panel" aria-label="Tutor conversation">
+                <div class="tutor-header">
+                  <div class="tutor-avatar">
+                    <svg><use href="#spark"/></svg>
+                  </div>
+
+                  <div>
+                    <h2>Your learning companion</h2>
+                    <span>One question at a time</span>
+                  </div>
+
+                  <span class="online-dot" title="Demo available"></span>
+                </div>
+
+                <!-- Scrollable conversation -->
+                <div class="chat-scroll" id="chat-scroll">
+                  <div class="chat-intro">
+                    <span class="eyebrow">LET’S THINK IT THROUGH</span>
+                    <p>No question is too small.</p>
+                  </div>
+
+                  <div
+                    id="messages"
+                    role="log"
+                    aria-live="polite"
+                    aria-label="Conversation"
+                  ></div>
+                </div>
+
+                <!-- Suggested prompts and message input -->
+                <div class="chat-bottom">
+                  <div class="suggestions">
+                    <button data-prompt="Explain it simply">
+                      Explain it simply
+                    </button>
+                    <button data-prompt="Give me an example">
+                      Give me an example
+                    </button>
+                    <button data-prompt="Give me a hint">
+                      Give me a hint
+                    </button>
+                  </div>
+
+                  <form id="chat-form">
+                    <label class="sr-only" for="chat-input">
+                      Ask TeacherBot a question
+                    </label>
+                    <textarea
+                      id="chat-input"
+                      rows="2"
+                      placeholder="What would you like to understand?"
+                      maxlength="5000"
+                      required
+                    ></textarea>
+
+                    <div class="composer-bottom">
+                      <span>Take your time. I’m here to help.</span>
+                      <button
+                        class="send-button"
+                        type="submit"
+                        aria-label="Send message"
+                      >
+                        <svg><use href="#arrow"/></svg>
+                      </button>
+                    </div>
+                  </form>
+
+                  <p class="chat-disclaimer" id="chat-disclaimer">
+                    Sample responses · Connect your backend for AI tutoring
+                  </p>
+                </div>
+              </aside>
+            </div>
+
+            <div class="bottom-note">
+              <svg><use href="#leaf"/></svg>
+              <span>
+                Understanding takes practice. You’re in the right place.
+              </span>
+              <span class="bottom-brand">LEARN WITH CURIOSITY</span>
+            </div>
+          </section>
+        </main>
+      </div>
+    </div>
+
+    <!-- Dialog: create a lesson from pasted material or a text file -->
+    <dialog id="material-dialog">
+      <form id="material-form">
+        <div class="dialog-heading">
+          <div>
+            <span class="eyebrow">SOMETHING NEW TO EXPLORE</span>
+            <h2>What are we learning?</h2>
+          </div>
+
+          <button
+            type="button"
+            class="close-button"
+            data-close="material-dialog"
+            aria-label="Close"
+          >
+            ×
+          </button>
+        </div>
+
+        <p class="body-copy">
+          Give your lesson a name and add the material you want to study.
+        </p>
+
+        <label for="material-title">Lesson title</label>
+        <input
+          id="material-title"
+          placeholder="e.g. Introduction to neural networks"
+          maxlength="100"
+          required
+        >
+
+        <label for="material-text">Your material</label>
+        <textarea
+          id="material-text"
+          placeholder="Paste your notes or a passage here…"
+          maxlength="50000"
+          required
+        ></textarea>
+
+        <label class="file-label" for="material-file">
+          <svg><use href="#file"/></svg>
+          Or import a text file
+          <input
+            type="file"
+            id="material-file"
+            accept=".txt,.md,text/plain,text/markdown"
+          >
+        </label>
+
+        <p class="form-error" id="file-error" role="alert"></p>
+        <p class="muted">
+          Saved in this browser. AI lessons become available when your backend is connected.
+        </p>
+
+        <button class="button primary full-width" type="submit">
+          Create lesson
+          <svg><use href="#arrow"/></svg>
+        </button>
+      </form>
+    </dialog>
+
+    <!-- Dialog: learning progress -->
+    <dialog id="progress-dialog">
+      <div class="dialog-heading">
+        <div>
+          <span class="eyebrow">EVERY STEP COUNTS</span>
+          <h2>Your progress</h2>
+        </div>
+
+        <button
+          class="close-button"
+          data-close="progress-dialog"
+          aria-label="Close"
+        >
+          ×
+        </button>
+      </div>
+
+      <div id="progress-content"></div>
+      <p class="muted">Progress is saved on this device.</p>
+    </dialog>
+
+    <!-- Temporary notification messages -->
+    <div id="toast" class="toast" role="status" hidden></div>
+  </body>
+</html>
