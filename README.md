@@ -9,11 +9,11 @@ To create an AI powered interactive learning tool to help students better unders
 
 Following the development completion of the first mode, implementation of the second and third mode will begin. The second mode will feature a practice question module still with the chat box on the right. The third module will provide mock exam content based on previous conversations with a timer on the right.
 
-Currently developed
+Completed:
 - Front end for the first module is complete.
 - API call and response handling for chatbox is complete.
 
-In development:
+Next Steps:
 - Add loading symbol while waiting for response.
 - Create slideshow interactivity.
 - Module 2 and 3.
