@@ -499,7 +499,7 @@ function renderMessages() {
 
   $('#messages').innerHTML = messages.map((message) => {
     const isUser = message.role === 'user';
-    const label = isUser ? 'YOU' : icon('spark') + ' TEACHERBOT';
+    const label = isUser ? 'YOU' : icon('spark') + ' Tutor-U';
 
     // Keep content directly beside its tags: CSS preserves its whitespace.
     return `

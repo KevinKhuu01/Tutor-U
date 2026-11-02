@@ -5,6 +5,7 @@ import time
 import json 
 from flask import Flask, request 
 
+
 # Hide API key
 load_dotenv()
 client = genai.Client(api_key=os.environ["GEMINI_API_KEY"])
